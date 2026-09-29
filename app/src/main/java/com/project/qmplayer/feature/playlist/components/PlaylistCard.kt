@@ -68,7 +68,7 @@ fun PlaylistCard(
                     )
                 }
 
-                IconButton(onClick = onExpandClick){
+                IconButton(onClick = onMenuClick){
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "More options"

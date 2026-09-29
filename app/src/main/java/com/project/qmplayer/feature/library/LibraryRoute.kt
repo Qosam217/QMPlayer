@@ -4,12 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.project.qmplayer.di.QMPlayerContainer
+import com.project.qmplayer.domain.model.Song
 
 @Composable
 fun LibraryRoute(
     container: QMPlayerContainer,
     onSongClick: (String) -> Unit,
-    onSongMenuClick: (String) -> Unit,
+    onSongMenuClick: (Song) -> Unit,
     modifier: Modifier = Modifier
 ){
     val viewModel: LibraryViewModel = viewModel(

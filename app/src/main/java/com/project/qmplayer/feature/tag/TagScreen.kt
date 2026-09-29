@@ -18,7 +18,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.project.qmplayer.core.ui.components.SortSection
+import com.project.qmplayer.domain.model.Tag
 import com.project.qmplayer.feature.tag.components.TagCard
+import com.project.qmplayer.feature.tag.components.TagOptionModal
 
 @Composable
 fun TagScreen(
@@ -30,6 +32,10 @@ fun TagScreen(
 
     var expandedTagByIds by remember {
         mutableStateOf(emptySet<Long>())
+    }
+
+    var selectedTag by remember {
+        mutableStateOf<Tag?>(null)
     }
 
     when{
@@ -67,7 +73,7 @@ fun TagScreen(
                                 }
                             },
                             onMenuClick = {
-                                onTagClick(tagId)
+                                selectedTag = item.tag
                             }
 
                         )
@@ -75,6 +81,21 @@ fun TagScreen(
                 }
             }
         }
+    }
+    selectedTag?.let { tag ->
+        TagOptionModal(
+            onDismiss = {
+                selectedTag = null
+            },
+            onOptionClick = { option ->
+                when (option) {
+                    TagOption.PLAY -> {}
+                    TagOption.RENAME -> {}
+                    TagOption.DELETE -> {}
+                }
+                selectedTag = null
+            }
+        )
     }
 }
 

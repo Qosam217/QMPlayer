@@ -18,7 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.project.qmplayer.core.ui.components.SortSection
+import com.project.qmplayer.domain.model.Playlist
 import com.project.qmplayer.feature.playlist.components.PlaylistCard
+import com.project.qmplayer.feature.playlist.components.PlaylistOptionModal
 
 @Composable
 fun PlaylistScreen(
@@ -30,6 +32,10 @@ fun PlaylistScreen(
 
     var expandedPlaylistByIds by remember{
         mutableStateOf(emptySet<Long>())
+    }
+
+    var selectedPlaylist by remember{
+        mutableStateOf<Playlist?>(null)
     }
 
     when {
@@ -68,13 +74,28 @@ fun PlaylistScreen(
                                     }
                             },
                             onMenuClick = {
-                                onPlaylistClick(playlistId)
+                                selectedPlaylist = item.playlist
                             }
                         )
                     }
                 }
             }
         }
+    }
+    selectedPlaylist?.let { playlist ->
+        PlaylistOptionModal(
+            onDismiss = {
+                selectedPlaylist = null
+            },
+            onOptionClick = { option ->
+                when (option) {
+                    PlaylistOption.PLAY -> {}
+                    PlaylistOption.RENAME -> {}
+                    PlaylistOption.DELETE -> {}
+                }
+                selectedPlaylist = null
+            }
+        )
     }
 }
 
