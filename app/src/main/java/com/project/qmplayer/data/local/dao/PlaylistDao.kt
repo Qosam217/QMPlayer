@@ -14,7 +14,7 @@ interface PlaylistDao{
     fun observeAll(): Flow<List<PlaylistEntity>>
 
     @Query("SELECT * FROM playlists WHERE id = :id")
-    fun observeById(id: Long): Flow<PlaylistEntity>
+    fun observeById(id: Long): Flow<PlaylistEntity?>
 
     @Insert
     suspend fun insert(playlistEntity: PlaylistEntity)

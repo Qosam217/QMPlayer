@@ -66,7 +66,7 @@ fun SongCard(
                 )
 
                 Text(
-                    text = song.artist!!,
+                    text = song.artist ?: "Unknown Artist",
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = TextSecondary

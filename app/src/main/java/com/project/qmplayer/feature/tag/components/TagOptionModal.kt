@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -51,6 +52,14 @@ fun TagOptionModal(
                 title = "Delete",
                 onClick = {
                     onOptionClick(TagOption.DELETE)
+                }
+            )
+
+            TagOptionItem(
+                icon = { Icon(imageVector = Icons.Default.Info, contentDescription = null) },
+                title = "Info",
+                onClick = {
+                    onOptionClick(TagOption.INFO)
                 }
             )
         }

@@ -23,4 +23,12 @@ class SongRepositoryImpl(
     override suspend fun getSong(songUri: String): Song? {
         return mediaStoreDataSource.getSong(songUri)
     }
+
+    override suspend fun renameSong(songUri: String, newTitle: String): Boolean {
+        return mediaStoreDataSource.renameSong(songUri, newTitle)
+    }
+
+    override suspend fun deleteSong(songUri: String): Boolean {
+        return mediaStoreDataSource.deleteSong(songUri)
+    }
 }

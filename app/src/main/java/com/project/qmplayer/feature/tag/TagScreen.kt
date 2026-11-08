@@ -17,9 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import com.project.qmplayer.core.ui.components.ConfirmDeleteDialog
 import com.project.qmplayer.core.ui.components.SortSection
 import com.project.qmplayer.domain.model.Tag
+import com.project.qmplayer.feature.tag.components.CreateTagDialog
 import com.project.qmplayer.feature.tag.components.TagCard
+import com.project.qmplayer.feature.tag.components.TagInfoDialog
 import com.project.qmplayer.feature.tag.components.TagOptionModal
 
 @Composable
@@ -29,18 +32,21 @@ fun TagScreen(
     onTagClick: (Long) -> Unit,
 ){
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val sortOrder by viewModel.sortOrder.collectAsStateWithLifecycle()
 
-    var expandedTagByIds by remember {
-        mutableStateOf(emptySet<Long>())
-    }
+    var expandedTagByIds by remember { mutableStateOf(emptySet<Long>()) }
+    var selectedTagItem by remember { mutableStateOf<TagItem?>(null) }
+    var tagToRename by remember { mutableStateOf<Tag?>(null) }
+    var tagToDelete by remember { mutableStateOf<Tag?>(null) }
+    var tagForInfo by remember { mutableStateOf<TagItem?>(null) }
 
-    var selectedTag by remember {
-        mutableStateOf<Tag?>(null)
+    val existingNames = remember(uiState.tags) {
+        uiState.tags.map { it.tag.name }
     }
 
     when{
         uiState.isLoading -> {
-
+            // Keep existing UI structure
         }
 
         uiState.tags.isEmpty() -> {
@@ -49,10 +55,16 @@ fun TagScreen(
 
         else -> {
             Column(modifier = modifier.fillMaxSize()) {
-                SortSection("Sort", {}, modifier = Modifier.fillMaxWidth())
+                SortSection(
+                    title = "Sort: ${sortOrder.label}",
+                    onSortClick = { viewModel.toggleSortOrder() },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(
@@ -73,28 +85,71 @@ fun TagScreen(
                                 }
                             },
                             onMenuClick = {
-                                selectedTag = item.tag
+                                selectedTagItem = item
                             }
-
                         )
                     }
                 }
             }
         }
     }
-    selectedTag?.let { tag ->
+
+    selectedTagItem?.let { item ->
         TagOptionModal(
             onDismiss = {
-                selectedTag = null
+                selectedTagItem = null
             },
             onOptionClick = { option ->
                 when (option) {
-                    TagOption.PLAY -> {}
-                    TagOption.RENAME -> {}
-                    TagOption.DELETE -> {}
+                    TagOption.PLAY -> {
+                        onTagClick(item.tag.id)
+                    }
+                    TagOption.RENAME -> {
+                        tagToRename = item.tag
+                    }
+                    TagOption.DELETE -> {
+                        tagToDelete = item.tag
+                    }
+                    TagOption.INFO -> {
+                        tagForInfo = item
+                    }
                 }
-                selectedTag = null
+                selectedTagItem = null
             }
+        )
+    }
+
+    tagToRename?.let { tag ->
+        CreateTagDialog(
+            existingNames = existingNames,
+            initialName = tag.name,
+            title = "Rename Tag",
+            confirmLabel = "Save",
+            onConfirm = { newName ->
+                viewModel.renameTag(tag, newName)
+                tagToRename = null
+            },
+            onDismiss = { tagToRename = null }
+        )
+    }
+
+    tagToDelete?.let { tag ->
+        ConfirmDeleteDialog(
+            title = "Delete Tag",
+            message = "Are you sure you want to delete '${tag.name}'?",
+            onConfirm = {
+                viewModel.deleteTag(tag)
+                tagToDelete = null
+            },
+            onDismiss = { tagToDelete = null }
+        )
+    }
+
+    tagForInfo?.let { item ->
+        TagInfoDialog(
+            tag = item.tag,
+            songs = item.songs,
+            onDismiss = { tagForInfo = null }
         )
     }
 }
@@ -108,6 +163,6 @@ private fun EmptyTagContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("No Tags Found")
+        Text("No tags found")
     }
 }

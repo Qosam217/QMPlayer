@@ -1,6 +1,7 @@
 package com.project.qmplayer.feature.playlist.components
 
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -10,35 +11,55 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
-
 @Composable
 fun CreatePlaylistDialog(
     onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: (String) -> Unit,
+    existingNames: List<String> = emptyList(),
+    initialName: String = "",
+    title: String = "New Playlist",
+    confirmLabel: String = "Create"
 ){
-    var name by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf(initialName) }
+    var isSubmitting by remember { mutableStateOf(false) }
+
+    val trimmedName = name.trim()
+    val isDuplicate = existingNames.any {
+        !it.equals(initialName.trim(), ignoreCase = true) && it.equals(trimmedName, ignoreCase = true)
+    }
+    val errorMessage = when {
+        isDuplicate -> "A playlist with this name already exists"
+        name.isNotEmpty() && trimmedName.isEmpty() -> "Name cannot be only spaces"
+        else -> null
+    }
+    val isConfirmEnabled = trimmedName.isNotEmpty() && !isDuplicate && !isSubmitting
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("New Playlist") },
+        title = { Text(title) },
         text = {
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Playlist name") },
-                singleLine = true
+                singleLine = true,
+                isError = errorMessage != null,
+                supportingText = errorMessage?.let {
+                    { Text(it, color = MaterialTheme.colorScheme.error) }
+                }
             )
         },
         confirmButton = {
             TextButton(
+                enabled = isConfirmEnabled,
                 onClick = {
-                    val trimmedName = name.trim()
-                    if (trimmedName.isNotEmpty()){
+                    if (isConfirmEnabled) {
+                        isSubmitting = true
                         onConfirm(trimmedName)
                     }
                 }
             ) {
-                Text("Create")
+                Text(confirmLabel)
             }
         },
         dismissButton = {

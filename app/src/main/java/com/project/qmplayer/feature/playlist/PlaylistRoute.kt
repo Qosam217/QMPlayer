@@ -2,6 +2,7 @@ package com.project.qmplayer.feature.playlist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.project.qmplayer.di.QMPlayerContainer
 import com.project.qmplayer.feature.playlist.components.CreatePlaylistDialog
@@ -28,7 +29,9 @@ fun PlaylistRoute(
     )
 
     if(showCreateDialog){
+        val existingNames = viewModel.uiState.collectAsStateWithLifecycle().value.playlists.map { it.playlist.name }
         CreatePlaylistDialog(
+            existingNames = existingNames,
             onConfirm = { name ->
                 viewModel.createPlaylist(name)
                 onCreateDialogDismiss()

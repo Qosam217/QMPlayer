@@ -14,10 +14,10 @@ interface TagDao {
     fun observeAll(): Flow<List<TagEntity>>
 
     @Query("SELECT * FROM tags WHERE id = :id")
-    fun observeById(id: Long): Flow<TagEntity>
+    fun observeById(id: Long): Flow<TagEntity?>
 
     @Insert
-    suspend fun insert(tagEntity: TagEntity)
+    suspend fun insert(tagEntity: TagEntity): Long
 
     @Update
     suspend fun update(tagEntity: TagEntity)

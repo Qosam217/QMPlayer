@@ -20,7 +20,7 @@ class PlaylistRepositoryImpl(
     }
 
     override fun observePlaylist(id: Long): Flow<Playlist?> {
-        return playlistDao.observeById(id).map { it.toDomain() }
+        return playlistDao.observeById(id).map { it?.toDomain() }
     }
 
     override fun observeSongUris(playlistId: Long): Flow<List<String>> {
@@ -63,6 +63,10 @@ class PlaylistRepositoryImpl(
             playlistId = playlistId,
             songUri = songUri
         )
+    }
+
+    override suspend fun removeSongFromAllPlaylists(songUri: String) {
+        playlistSongDao.deleteSongFromAllPlaylists(songUri)
     }
 
     override suspend fun clearPlaylist(playlistId: Long) {

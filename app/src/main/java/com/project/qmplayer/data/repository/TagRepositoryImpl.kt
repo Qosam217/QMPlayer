@@ -30,10 +30,9 @@ class TagRepositoryImpl(
     }
 
     override suspend fun createTag(name: String): Long {
-        tagDao.insert(TagEntity(
+        return tagDao.insert(TagEntity(
             name = name
         ))
-        return tagDao.observeAll().first().last().id
     }
 
     override suspend fun updateTag(tag: Tag) {
@@ -44,6 +43,7 @@ class TagRepositoryImpl(
     }
 
     override suspend fun deleteTag(tag: Tag) {
+        songTagDao.deleteByTagId(tag.id)
         tagDao.delete(TagEntity(
             id = tag.id,
             name = tag.name
@@ -68,6 +68,10 @@ class TagRepositoryImpl(
 
     override suspend fun removeTagFromSong(songUri: String, tagId: Long) {
         songTagDao.delete(SongTagCrossRef(songUri, tagId))
+    }
+
+    override suspend fun removeAllTagsFromSong(songUri: String) {
+        songTagDao.deleteAllTagsForSong(songUri)
     }
 
     private fun TagEntity.toDomain(): Tag {

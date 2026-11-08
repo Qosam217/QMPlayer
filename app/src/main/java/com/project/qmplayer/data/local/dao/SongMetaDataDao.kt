@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SongMetaDataDao {
     @Query("SELECT * FROM song_metadata WHERE songUri = :songUri")
-    fun observeBySongUri(songUri: String): Flow<SongMetaDataEntity>
+    fun observeBySongUri(songUri: String): Flow<SongMetaDataEntity?>
 
     @Query("SELECT * FROM song_metadata")
     fun observeAll(): Flow<List<SongMetaDataEntity>>

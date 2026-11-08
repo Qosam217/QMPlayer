@@ -2,6 +2,7 @@ package com.project.qmplayer.feature.tag
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.project.qmplayer.di.QMPlayerContainer
 import com.project.qmplayer.feature.tag.components.CreateTagDialog
@@ -28,7 +29,9 @@ fun TagRoute(
     )
 
     if(showCreateDialog){
+        val existingNames = tagViewModel.uiState.collectAsStateWithLifecycle().value.tags.map { it.tag.name }
         CreateTagDialog(
+            existingNames = existingNames,
             onConfirm = { name ->
                 tagViewModel.createTag(name)
                 onCreateDialogDismiss()

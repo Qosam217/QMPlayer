@@ -38,4 +38,10 @@ interface PlaylistSongDao {
         WHERE playlistId = :playlistId
     """)
     suspend fun deleteAllSongsInPlaylist(playlistId: Long)
+
+    @Query("""
+        DELETE FROM playlist_song
+        WHERE songUri = :songUri
+    """)
+    suspend fun deleteSongFromAllPlaylists(songUri: String)
 }

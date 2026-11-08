@@ -7,4 +7,8 @@ interface MediaStoreDataSource{
     fun observeSongs(): Flow<List<Song>>
 
     suspend fun getSong(songUri: String): Song?
+
+    suspend fun renameSong(songUri: String, newTitle: String): Boolean
+
+    suspend fun deleteSong(songUri: String): Boolean
 }

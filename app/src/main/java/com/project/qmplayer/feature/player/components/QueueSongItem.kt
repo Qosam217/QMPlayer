@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -63,7 +63,7 @@ fun QueueSongItem(
                 )
 
                 Text(
-                    text = song.artist!!,
+                    text = song.artist ?: "Unknown Artist",
                     maxLines = 1,
                     overflow =
                         TextOverflow.Ellipsis,
@@ -73,7 +73,7 @@ fun QueueSongItem(
 
             if(isPlaying){
                 Icon(
-                    imageVector = Icons.Default.VolumeUp,
+                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
                     contentDescription = null
                 )
             }

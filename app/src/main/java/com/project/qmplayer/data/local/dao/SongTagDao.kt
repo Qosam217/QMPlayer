@@ -35,6 +35,18 @@ interface SongTagDao {
     suspend fun deleteBySongUri(songUri: String, tagId: Long)
 
     @Query("""
+        DELETE FROM song_tag_cross_ref
+        WHERE tagId = :tagId
+    """)
+    suspend fun deleteByTagId(tagId: Long)
+
+    @Query("""
+        DELETE FROM song_tag_cross_ref
+        WHERE songUri = :songUri
+    """)
+    suspend fun deleteAllTagsForSong(songUri: String)
+
+    @Query("""
         SELECT tags.* FROM tags
         INNER JOIN song_tag_cross_ref 
             ON tags.id = song_tag_cross_ref.tagId

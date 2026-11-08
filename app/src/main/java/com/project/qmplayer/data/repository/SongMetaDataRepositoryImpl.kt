@@ -12,8 +12,8 @@ class SongMetaDataRepositoryImpl(
 ): SongMetaDataRepository {
     override fun observeSongMetaData(songUri: String): Flow<SongMetaData?>{
         return dao.observeBySongUri(songUri)
-            .map {
-                entity -> entity.toDomain()
+            .map { entity ->
+                entity?.toDomain()
             }
     }
 

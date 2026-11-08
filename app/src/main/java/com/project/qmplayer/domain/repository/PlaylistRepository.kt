@@ -20,5 +20,7 @@ interface PlaylistRepository {
 
     suspend fun removeSong(playlistId: Long, songUri: String)
 
+    suspend fun removeSongFromAllPlaylists(songUri: String)
+
     suspend fun clearPlaylist(playlistId: Long)
 }

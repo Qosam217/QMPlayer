@@ -21,4 +21,6 @@ interface TagRepository {
     suspend fun addTagToSong(songUri: String, tagId: Long)
 
     suspend fun removeTagFromSong(songUri: String, tagId: Long)
+
+    suspend fun removeAllTagsFromSong(songUri: String)
 }

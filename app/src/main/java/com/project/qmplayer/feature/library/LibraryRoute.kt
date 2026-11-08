@@ -15,7 +15,10 @@ fun LibraryRoute(
 ){
     val viewModel: LibraryViewModel = viewModel(
         factory = LibraryViewModelFactory(
-            container.songRepository
+            songRepository = container.songRepository,
+            playlistRepository = container.playlistRepository,
+            tagRepository = container.tagRepository,
+            songMetaDataRepository = container.songMetadataRepository
         )
     )
 
