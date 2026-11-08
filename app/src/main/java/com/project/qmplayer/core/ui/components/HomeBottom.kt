@@ -20,14 +20,15 @@ fun HomeBottom(
     onPlayPause: () -> Unit,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
+    onExpandPlayer: () -> Unit,
     modifier: Modifier = Modifier,
-){
+) {
     Column(
         modifier = modifier
             .background(MaterialTheme.colorScheme.background)
             .navigationBarsPadding()
             .padding(start = 12.dp, end = 12.dp, top = 10.dp, bottom = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         MiniPlayer(
             track = track,
@@ -35,10 +36,11 @@ fun HomeBottom(
             onPlayPause = onPlayPause,
             onPrevious = onPrevious,
             onNext = onNext,
+            onExpand = onExpandPlayer,
         )
         BottomNavigation(
             selected = selectedTab,
-            onSelect = onSelectTab
+            onSelect = onSelectTab,
         )
     }
 }
