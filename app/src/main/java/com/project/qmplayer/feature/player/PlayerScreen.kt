@@ -1,5 +1,6 @@
 package com.project.qmplayer.feature.player
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -16,11 +17,13 @@ import kotlinx.coroutines.launch
  * Full-screen player.
  *
  * Page layout (HorizontalPager):
- *   0 — Music Player (artwork, controls, seek bar, tags)
- *   1 — On Playing  (current queue list)
+ *   0 — On Playing (current queue list)
+ *   1 — Music Player (artwork, controls, seek bar, tags)
  *
- * Swipe right from page 0 → page 1; swipe left from page 1 → page 0.
- * Back from either page returns to Home via [onBackClick].
+ * Opens initially on Page 1 (Music Player).
+ * Swiping right from Music Player reveals Page 0 (On Playing).
+ * Swiping left from On Playing returns to Page 1 (Music Player).
+ * Back from either page (system back or visible back control) returns to Home via [onBackClick].
  */
 @Composable
 fun PlayerScreen(
@@ -31,8 +34,11 @@ fun PlayerScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
 
+    // System back returns to Home from either page without duplicate navigation
+    BackHandler(onBack = onBackClick)
+
     val pagerState = rememberPagerState(
-        initialPage = 0,
+        initialPage = 1,
         pageCount = { 2 },
     )
 
@@ -41,7 +47,13 @@ fun PlayerScreen(
         modifier = modifier.fillMaxSize(),
     ) { page ->
         when (page) {
-            0 -> MusicPlayerContent(
+            0 -> NowPlayingContent(
+                songs = uiState.queue,
+                currentQueueIndex = uiState.currentQueueIndex,
+                onSongClick = { index -> viewModel.jumpToQueueItem(index) },
+                onBackClick = onBackClick,
+            )
+            1 -> MusicPlayerContent(
                 uiState = uiState,
                 onBackClick = onBackClick,
                 onPlayPause = viewModel::togglePlayPause,
@@ -51,14 +63,6 @@ fun PlayerScreen(
                 onShuffle = viewModel::toggleShuffle,
                 onRepeatAll = viewModel::toggleRepeatAll,
                 onOpenQueue = {
-                    scope.launch { pagerState.animateScrollToPage(1) }
-                },
-            )
-            1 -> NowPlayingContent(
-                songs = uiState.queue,
-                currentQueueIndex = uiState.currentQueueIndex,
-                onSongClick = { index -> viewModel.jumpToQueueItem(index) },
-                onBackClick = {
                     scope.launch { pagerState.animateScrollToPage(0) }
                 },
             )

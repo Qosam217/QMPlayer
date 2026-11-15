@@ -77,7 +77,7 @@ fun HomeScreen(
                 NavigationPage.Library -> LibraryRoute(
                     container = container,
                     onSongClick = { uri ->
-                        println("Song clicked: $uri")
+                        showPlayer = true
                     },
                     onSongMenuClick = { song ->
                         println("Song menu clicked: ${song.title}")

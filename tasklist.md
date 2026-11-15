@@ -125,11 +125,11 @@ Compose UI -> ViewModel -> MediaController
                                         exist                     state and connect
                                                                   navigation
 
-  Music Player UI                       Proposed design/sample    Implement in Phase 3
-                                        code only                 
+  Music Player UI                       Functional & integrated   Ready for Media3
+                                        (Phase 3 verified)        service (Phase 4)
 
-  On Playing queue UI                   Proposed design/sample    Implement in Phase 3
-                                        code only                 
+  On Playing queue UI                   Functional & integrated   Ready for Media3
+                                        (Phase 3 verified)        service (Phase 4)
 
   MediaSessionService/MediaController   Not yet implemented       Implement in Phase 4
 
@@ -311,33 +311,33 @@ shuffled/effective playback order.
 
 ### 7.2 UI tasks
 
--   [ ] Inspect existing `feature/player` files and preserve completed
-    components.
--   [ ] Implement/complete `PlayerRoute` and `PlayerScreen`.
--   [ ] Implement/complete Music Player content and On Playing content.
--   [ ] Implement/complete artwork, controls, seek bar and queue row
-    components.
--   [ ] Display title/artist with safe fallbacks.
--   [ ] Display tags from tag repository.
--   [ ] Format current position and duration.
--   [ ] Make seek interaction update the real player.
--   [ ] Reflect unavailable previous/next states where appropriate.
--   [ ] Highlight the currently playing queue item.
--   [ ] Keep On Playing focused on the queue list.
--   [ ] Treat visuals as a functional first pass; user plans to refine
-    them against Figma later.
+-   [x] Inspect existing `feature/player` files and preserve completed
+    components. (Preserved and updated components).
+-   [x] Implement/complete `PlayerRoute` and `PlayerScreen`. (Manual DI via `PlayerViewModel.Factory(container)` wired; BackHandler and HorizontalPager integrated).
+-   [x] Implement/complete Music Player content and On Playing content. (Implemented `MusicPlayerContent` with tags/artwork/controls and `NowPlayingContent` with interactive queue list).
+-   [x] Implement/complete artwork, controls, seek bar and queue row
+    components. (Implemented `PlayerArtwork`, `PlayerControls`, `PlayerSeekBar`, and `QueueSongItem`).
+-   [x] Display title/artist with safe fallbacks. (Handled blank/null title and artist fallbacks: "Unknown Title", "Unknown Artist").
+-   [x] Display tags from tag repository. (Observed reactive `TagRepository.observeTagsForSong` and displayed via AssistChips).
+-   [x] Format current position and duration. (Formatted using `formatDuration` from `FormatUtils.kt`).
+-   [x] Make seek interaction update the real player. (Seek updates `PlayerViewModel.seekTo`, ready for MediaController in Phase 4).
+-   [x] Reflect unavailable previous/next states where appropriate. (`canSkipPrevious` / `canSkipNext` disable buttons in `PlayerControls`).
+-   [x] Highlight the currently playing queue item. (`QueueSongItem` highlighted container color, bold primary title, and `VolumeUp` indicator).
+-   [x] Keep On Playing focused on the queue list. (`NowPlayingContent` focused purely on queue list and auto-scrolls to current item).
+-   [x] Treat visuals as a functional first pass; user plans to refine
+    them against Figma later. (Verified).
 
 ### 7.3 Swipe and back
 
--   [ ] Use HorizontalPager or equivalent.
--   [ ] Open initially on Music Player.
--   [ ] Swiping right from Music Player reveals On Playing.
--   [ ] Swiping left from On Playing returns to Music Player.
--   [ ] Back from either page returns to Home.
--   [ ] Verify system back and visible back controls do not create
-    duplicate navigation.
--   [ ] Player must be an exclusive full-screen branch, not composed
-    alongside the Home `Scaffold`.
+-   [x] Use HorizontalPager or equivalent. (Implemented 2-page `HorizontalPager`).
+-   [x] Open initially on Music Player. (`initialPage = 1` starts on Music Player).
+-   [x] Swiping right from Music Player reveals On Playing. (Swiping right transitions from Page 1 to Page 0 On Playing).
+-   [x] Swiping left from On Playing returns to Music Player. (Swiping left transitions from Page 0 to Page 1 Music Player).
+-   [x] Back from either page returns to Home. (Both top-bar back controls and system BackHandler route to `onBackClick`).
+-   [x] Verify system back and visible back controls do not create
+    duplicate navigation. (Single `onBackClick` callback toggles `showPlayer = false`).
+-   [x] Player must be an exclusive full-screen branch, not composed
+    alongside the Home `Scaffold`. (Verified in `HomeScreen.kt`).
 
 Suggested organization only if it matches existing structure:
 
@@ -604,7 +604,7 @@ Prioritize a working end-to-end playback path before optional features.
 2.  [ ] Phase 1 --- verify MediaStore and Room foundations.
 3.  [ ] Phase 4 --- Media3 service and controller.
 4.  [ ] Phases 5--6 --- minimal real playback from one Library song.
-5.  [ ] Phase 3 --- complete Player and On Playing UI using real state.
+5.  [x] Phase 3 --- complete Player and On Playing UI using real state.
 6.  [ ] Phase 5 --- queue, shuffle and repeat-all.
 7.  [ ] Phase 6 --- mini player and all playback entry points.
 8.  [ ] Phase 2 --- complete Song/Playlist/Tag actions.

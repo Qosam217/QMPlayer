@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,6 +26,8 @@ fun PlayerControls(
     isPlaying: Boolean,
     isShuffleEnabled: Boolean,
     playbackMode: PlaybackMode,
+    canSkipPrevious: Boolean,
+    canSkipNext: Boolean,
     onPrevious: () -> Unit,
     onPlayPause: () -> Unit,
     onNext: () -> Unit,
@@ -51,7 +52,10 @@ fun PlayerControls(
             )
         }
 
-        IconButton(onClick = onPrevious) {
+        IconButton(
+            onClick = onPrevious,
+            enabled = canSkipPrevious,
+        ) {
             Icon(
                 imageVector = Icons.Default.SkipPrevious,
                 contentDescription = "Previous",
@@ -69,7 +73,10 @@ fun PlayerControls(
             )
         }
 
-        IconButton(onClick = onNext) {
+        IconButton(
+            onClick = onNext,
+            enabled = canSkipNext,
+        ) {
             Icon(
                 imageVector = Icons.Default.SkipNext,
                 contentDescription = "Next",

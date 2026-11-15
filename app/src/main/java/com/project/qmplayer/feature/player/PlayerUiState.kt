@@ -14,4 +14,6 @@ data class PlayerUiState(
     val duration: Long = 0L,
     val isShuffleEnabled: Boolean = false,
     val playbackMode: PlaybackMode = PlaybackMode.REPEAT_ALL,
+    val canSkipPrevious: Boolean = false,
+    val canSkipNext: Boolean = false,
 )

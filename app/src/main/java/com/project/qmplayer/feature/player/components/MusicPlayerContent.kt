@@ -56,9 +56,9 @@ fun MusicPlayerContent(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // Title
+        // Title with safe fallback
         Text(
-            text = uiState.currentSong?.title ?: "No Song Playing",
+            text = uiState.currentSong?.title?.ifBlank { "Unknown Title" } ?: "No Song Playing",
             style = MaterialTheme.typography.titleLarge,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -66,9 +66,9 @@ fun MusicPlayerContent(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Artist
+        // Artist with safe fallback
         Text(
-            text = uiState.currentSong?.artist ?: "Unknown Artist",
+            text = uiState.currentSong?.artist?.ifBlank { "Unknown Artist" } ?: "Unknown Artist",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
@@ -104,6 +104,8 @@ fun MusicPlayerContent(
             isPlaying = uiState.isPlaying,
             isShuffleEnabled = uiState.isShuffleEnabled,
             playbackMode = uiState.playbackMode,
+            canSkipPrevious = uiState.canSkipPrevious,
+            canSkipNext = uiState.canSkipNext,
             onPrevious = onPrevious,
             onPlayPause = onPlayPause,
             onNext = onNext,
@@ -129,7 +131,7 @@ private fun PlayerTopBar(
         IconButton(onClick = onBackClick) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
+                contentDescription = "Back to home",
             )
         }
         Text(
